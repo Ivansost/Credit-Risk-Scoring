@@ -34,5 +34,31 @@ The first stage focused on **cleaning and exploring** the dataset:
 From the analysis, clients with a **Graduate School** education have the highest average credit limits in Canadian dollars, followed by those with a University degree.
 This could be because individuals with higher education levels often secure higher-paying jobs, leading banks to trust them with larger credit lines.
 
-The data shows that Married clients are slightly more likely to default compared to Single or Unknown groups.
+The data shows that **Married** clients are slightly more likely to default compared to Single or Unknown groups.
 One possible reason could be that married households often have higher combined expenses (mortgages, dependents, etc.), which may increase financial stress and default risk.
+
+
+## Machine Learning 
+
+After analyzing the data, I trained a LLM model to **predict whether a customer would default** on their credit card.  
+
+- The model learned from **30,000 past customer records**, which included features like Credit limit, Education level, Marital status, Age, How much of their limit they used, and Past repayment history.
+
+- The job of the model was to **guess “Default” or “No Default” for each customer**.  
+
+- I used a method called **Random Forest**:  
+  - Imagine asking **100 small decision trees** to each make a guess.  
+  - Each tree sees slightly different parts of the data.  
+  - They all “vote” and the forest gives the final answer.  
+  - This makes the prediction **more accurate and reliable** than a single tree.  
+
+- The model gives two outputs:  
+  1. A **probability of default** (for example, 0.72 = 72% chance).  
+  2. A **final decision** (Default / No Default) based on a threshold.  
+
+- We also checked **feature importance** to see what mattered most.  
+  - Features like **repayment history** and **credit utilization** were the biggest drivers of default risk.  
+
+In plain terms: The machine learning part was about teaching the computer to recognize patterns in the data, so it can predict which new customers are **at higher risk of defaulting**.  
+
+---
