@@ -106,9 +106,8 @@ tab_findings, tab_who, tab_model, tab_explain = st.tabs([
     "Model Performance (Optional)",
     "Explain (Random Forest)"
 ])
-
 # -----------------------------
-# Findings (clean screenshotables)
+# Findings (clean, no ambiguous categories)
 # -----------------------------
 with tab_findings:
     st.subheader("Dataset Snapshot")
@@ -116,46 +115,65 @@ with tab_findings:
     st.dataframe(df.head(8))
 
     col1, col2 = st.columns(2)
+
     # Average Credit Limit (Canadian) by Education
     with col1:
         if {"Education", "Credit Limit (Canadian)"} <= set(df.columns):
+            sub = df[~df["Education"].isin(["Others", "Unknown"])]
+
             grp = (
-                df.groupby("Education", dropna=False)["Credit Limit (Canadian)"]
+                sub.groupby("Education")["Credit Limit (Canadian)"]
                 .mean()
-                .reindex(EDU_ORDER)
+                .reindex([e for e in EDU_ORDER if e not in ["Others", "Unknown"]])
                 .reset_index()
                 .rename(columns={"Credit Limit (Canadian)":"Average Credit Limit (Canadian)"})
             )
             st.markdown("### Average Credit Limit (Canadian) by Education")
             st.dataframe(grp)
+
+            st.markdown("<div style='margin-top:20px;'></div>", unsafe_allow_html=True)
+
             chart = (
                 alt.Chart(grp, title="Average Credit Limit (Canadian)")
                 .mark_bar()
-                .encode(x=alt.X("Education:N", sort=EDU_ORDER), y="Average Credit Limit (Canadian):Q")
+                .encode(
+                    x=alt.X("Education:N", sort=[e for e in EDU_ORDER if e not in ["Others", "Unknown"]]),
+                    y="Average Credit Limit (Canadian):Q"
+                )
+                .properties(height=400)
             )
             st.altair_chart(chart, use_container_width=True)
 
     # Default Rate by Marital Status
     with col2:
         if {"Marital Status", target_col} <= set(df.columns):
+            sub = df[~df["Marital Status"].isin(["Others", "Unknown"])]
+
             rates = (
-                df.groupby("Marital Status", dropna=False)[target_col]
+                sub.groupby("Marital Status")[target_col]
                 .mean()
-                .reindex(MAR_ORDER)
+                .reindex([m for m in MAR_ORDER if m not in ["Others", "Unknown"]])
                 .reset_index()
                 .rename(columns={target_col:"Default Rate"})
             )
             st.markdown("### Default Rate by Marital Status")
             st.dataframe(rates)
+
+            st.markdown("<div style='margin-top:20px;'></div>", unsafe_allow_html=True)
+
             chart = (
-                alt.Chart(rates, title="Default Rate")
+                alt.Chart(rates, title="Default Rate by Marital Status")
                 .mark_bar()
-                .encode(x=alt.X("Marital Status:N", sort=MAR_ORDER), y=alt.Y("Default Rate:Q"))
+                .encode(
+                    x=alt.X("Marital Status:N", sort=[m for m in MAR_ORDER if m not in ["Others", "Unknown"]]),
+                    y=alt.Y("Default Rate:Q")
+                )
+                .properties(height=400)
             )
             st.altair_chart(chart, use_container_width=True)
 
     st.markdown("---")
-    # Utilization Ratio Distribution
+    # Utilization Ratio Distribution stays unchanged
     if "UTIL_RATIO" in df.columns:
         st.markdown("### Utilization Ratio Distribution")
         # bin edges with Altair (approx)
