@@ -109,36 +109,43 @@ tab_findings, tab_who, tab_model, tab_explain = st.tabs([
 # -----------------------------
 # Findings (clean, no ambiguous categories)
 # -----------------------------
+
+# Keep Unknown, drop only Others
+CLEAN_EDU_ORDER = ["Graduate school", "University", "High school", "Unknown"]
+CLEAN_MAR_ORDER = ["Married", "Single", "Unknown"]
+# -----------------------------
+# Findings (exclude "Others", keep "Unknown")
+# -----------------------------
 with tab_findings:
     st.subheader("Dataset Snapshot")
     st.write(f"Rows: **{len(df)}**  •  Columns: **{len(df.columns)}**")
-    st.dataframe(df.head(8))
+    st.dataframe(df.head(8), use_container_width=True)
 
     col1, col2 = st.columns(2)
 
     # Average Credit Limit (Canadian) by Education
     with col1:
         if {"Education", "Credit Limit (Canadian)"} <= set(df.columns):
-            sub = df[~df["Education"].isin(["Others", "Unknown"])]
+            sub = df[~df["Education"].isin(["Others"])]  # drop only Others
 
             grp = (
-                sub.groupby("Education")["Credit Limit (Canadian)"]
+                sub.groupby("Education", dropna=False)["Credit Limit (Canadian)"]
                 .mean()
-                .reindex([e for e in EDU_ORDER if e not in ["Others", "Unknown"]])
+                .reindex(CLEAN_EDU_ORDER)
                 .reset_index()
-                .rename(columns={"Credit Limit (Canadian)":"Average Credit Limit (Canadian)"})
+                .rename(columns={"Credit Limit (Canadian)": "Average Credit Limit (Canadian)"})
             )
-            st.markdown("### Average Credit Limit (Canadian) by Education")
-            st.dataframe(grp)
 
-            st.markdown("<div style='margin-top:20px;'></div>", unsafe_allow_html=True)
+            st.markdown("### Average Credit Limit (Canadian) by Education")
+            st.dataframe(grp, use_container_width=True)
+            st.markdown("<div style='margin-top:20px'></div>", unsafe_allow_html=True)
 
             chart = (
                 alt.Chart(grp, title="Average Credit Limit (Canadian)")
                 .mark_bar()
                 .encode(
-                    x=alt.X("Education:N", sort=[e for e in EDU_ORDER if e not in ["Others", "Unknown"]]),
-                    y="Average Credit Limit (Canadian):Q"
+                    x=alt.X("Education:N", sort=CLEAN_EDU_ORDER, axis=alt.Axis(labelAngle=-20)),
+                    y=alt.Y("Average Credit Limit (Canadian):Q")
                 )
                 .properties(height=400)
             )
@@ -147,25 +154,25 @@ with tab_findings:
     # Default Rate by Marital Status
     with col2:
         if {"Marital Status", target_col} <= set(df.columns):
-            sub = df[~df["Marital Status"].isin(["Others", "Unknown"])]
+            sub = df[~df["Marital Status"].isin(["Others"])]  # drop only Others
 
             rates = (
-                sub.groupby("Marital Status")[target_col]
+                sub.groupby("Marital Status", dropna=False)[target_col]
                 .mean()
-                .reindex([m for m in MAR_ORDER if m not in ["Others", "Unknown"]])
+                .reindex(CLEAN_MAR_ORDER)
                 .reset_index()
-                .rename(columns={target_col:"Default Rate"})
+                .rename(columns={target_col: "Default Rate"})
             )
-            st.markdown("### Default Rate by Marital Status")
-            st.dataframe(rates)
 
-            st.markdown("<div style='margin-top:20px;'></div>", unsafe_allow_html=True)
+            st.markdown("### Default Rate by Marital Status")
+            st.dataframe(rates, use_container_width=True)
+            st.markdown("<div style='margin-top:20px'></div>", unsafe_allow_html=True)
 
             chart = (
                 alt.Chart(rates, title="Default Rate by Marital Status")
                 .mark_bar()
                 .encode(
-                    x=alt.X("Marital Status:N", sort=[m for m in MAR_ORDER if m not in ["Others", "Unknown"]]),
+                    x=alt.X("Marital Status:N", sort=CLEAN_MAR_ORDER, axis=alt.Axis(labelAngle=-20)),
                     y=alt.Y("Default Rate:Q")
                 )
                 .properties(height=400)
@@ -173,7 +180,8 @@ with tab_findings:
             st.altair_chart(chart, use_container_width=True)
 
     st.markdown("---")
-    # Utilization Ratio Distribution stays unchanged
+    # Utilization Ratio Distribution (unchanged)
+
     if "UTIL_RATIO" in df.columns:
         st.markdown("### Utilization Ratio Distribution")
         # bin edges with Altair (approx)
