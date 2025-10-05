@@ -6,7 +6,7 @@ This project uses the **UCI credit card dataset**, which contains **30,000 custo
 The purpose of this project was to:  
 - Demonstrate **parsing and cleaning large datasets** with pandas and SQL.  
 - Use **data visualization** to find trends, such as who is more likely to default, who has higher credit limits, and who spends the most.  
-- Apply **machine learning** (Random Forest and Logistic Regression) to predict which customers are likely to default and why.  
+- Apply **machine learning** to predict which customers are likely to default and why.  
 
 ---
 
