@@ -62,7 +62,7 @@ Here’s a simple illustration of how **Random Forest** works:
  "No Default"         "Default Likely"   "No Default"       "Default Likely"
 
 </pre>
-                                                               
+
 In simple terms, this model teaches the computer to **recognize patterns** in past customer data and predict which new customers might be **at higher risk of defaulting**.
 
 As shown below, I found that:
@@ -77,8 +77,7 @@ As shown below, I found that:
 The **ROC curve** below shows how well the model separates defaulters from non-defaulters:  
 - The **curve** measures how well the model balances accuracy across different thresholds.  
 
-The **AUC (Area Under the Curve)** is **0.86**, meaning the model is **86% accurate** at ranking risky customers higher than safe ones.  
-This indicates strong predictive performance — the Random Forest model reliably distinguishes between likely defaulters and non-defaulters.  
+The **AUC (Area Under the Curve)** is **0.86**, meaning the model is **86% accurate** at ranking risky customers higher than safe ones. This indicates strong predictive performance — the Random Forest model reliably distinguishes between likely defaulters and non-defaulters.  
 
 ![Model Accuracy](./screenshots/ROC.png)
 
@@ -86,9 +85,6 @@ This indicates strong predictive performance — the Random Forest model reliabl
 
 ### Final Thoughts  
 
-This project really interested me because I feel like people are going into debt every day.  
-A machine learning system like this could be implemented by banks to help **safeguard people before they go into debt**.  
-Models like this could even be used to create **adaptive credit limits** that adjust automatically, protecting customers from defaulting on their cards.  
+This project really interested me because I feel like people are going into debt every day. A machine learning system like this could be implemented by banks to help **safeguard people before they go into debt**. Models like this could even be used to create **adaptive credit limits** that adjust automatically, protecting customers from defaulting on their cards.  
 
-I learned a lot from this project as it strengthened my skills in **SQL**, **Pandas**, and grew my knowledge of **machine learning**,  
-while showing me how datasets can be manipulated to generate meaningful **reports and insights**.
+I learned a lot from this project as it strengthened my skills in **SQL**, **Pandas**, and grew my knowledge of **machine learning**, while showing me how datasets can be manipulated to generate meaningful **reports and insights**.
