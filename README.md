@@ -47,7 +47,7 @@ The model learned from **30,000 customer records** containing details like credi
 I used a method called **Random Forest**, which is a collection of many small decision trees that each make a prediction. Every tree looks at different parts of the data, and then they all **vote** on the final answer. This makes the overall prediction **more accurate and stable** than using just one tree.
 
 Here’s a simple illustration of how **Random Forest** works:
-
+<pre>
                 ┌──────────────────────────┐
                 │        Credit Limit      │
                 └─────────────┬────────────┘
@@ -61,7 +61,8 @@ Here’s a simple illustration of how **Random Forest** works:
        │                     │              │                    │
  "No Default"         "Default Likely"   "No Default"       "Default Likely"
 
-                                                                  
+</pre>
+                                                               
 In simple terms, this model teaches the computer to **recognize patterns** in past customer data and predict which new customers might be **at higher risk of defaulting**.
 
 As shown below, I found that:
